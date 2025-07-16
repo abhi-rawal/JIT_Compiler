@@ -1,0 +1,37 @@
+start: stmt+
+
+?stmt: assign
+     | print_stmt
+     | while_stmt
+     | expr ";"
+
+assign: NAME "=" expr ";"
+
+print_stmt: "print" expr ";"
+
+while_stmt: "while" condition "{" stmt+ "}"
+
+?condition: expr cmp_op expr
+
+?cmp_op: "==" -> eq
+       | "!=" -> neq
+       | ">"  -> gt
+       | "<"  -> lt
+
+?expr: expr "+" term   -> add
+     | expr "-" term   -> sub
+     | term
+
+?term: term "*" factor -> mul
+     | term "/" factor -> div
+     | factor
+
+?factor: NUMBER         -> number
+       | NAME           -> var
+       | "-" factor     -> neg
+       | "(" expr ")"
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.WS
+%ignore WS
